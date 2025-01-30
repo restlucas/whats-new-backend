@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config(); // Carrega variáveis de ambiente do .env
 
 const PORT = Number(process.env.PORT) || 3000; // Convertendo para número
-const HOST = process.env.HOST || "0.0.0.0"; // Para aceitar conexões externas
+const HOST = process.env.HOST || "localhost"; // Para aceitar conexões externas
 
 const startServer = () => {
   try {

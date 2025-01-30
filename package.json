@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm cache clean --force && tsc",
     "start": "node dist/server.js",
+    "deploy": "prisma migrate deploy && npm run build",
     "dev": "ts-node src/server.ts",
     "seed": "ts-node prisma/seed.ts"
   },
