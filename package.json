@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm cache clean --force && tsc",
+    "build": "chmod +x ./node_modules/.bin/tsc && npm cache clean --force && tsc",
     "start": "node dist/server.js",
     "deploy": "prisma migrate deploy && npm run build",
     "dev": "ts-node src/server.ts",
