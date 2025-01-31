@@ -1,26 +1,37 @@
+import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response } from "express";
 import authService from "../services/authService";
 import { serialize } from "cookie";
 
-export const check = async (req: Request, res: Response): Promise<any> => {
-  const token = req.cookies;
+export const check = async (req: Request, res: Response) => {
+  const token = req.cookies["@whats-new:token"];
 
-  if (!token["@whats-new:token"]) {
-    return res.status(401).json({ message: "No token provided" });
+  if (!token) {
+    res.json({ message: "No token provided", isValid: false, user: null });
+    return;
   }
 
-  try {
-    const response = await authService.check(token["@whats-new:token"]);
-    res.status(201).json({ message: "Authenticated", user: response });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "An unknown error occurred" });
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET as string,
+    (err: VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
+      if (err) {
+        console.error("Invalid token:", err);
+        return res.json({
+          message: "Invalid token",
+          isValid: false,
+          user: null,
+        });
+      }
+
+      return res.json({
+        message: "Token is valid",
+        isValid: true,
+        user: decoded,
+      });
     }
-  }
+  );
 };
-
 export const login = async (
   req: Request,
   res: Response
