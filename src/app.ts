@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: process.env.VERCEL_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
   })
 );

@@ -2,6 +2,9 @@ import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response } from "express";
 import authService from "../services/authService";
 import { serialize } from "cookie";
+import bcrypt from "bcryptjs";
+import { generateTokens, setRefreshTokenCookie } from "../utils/token";
+import userService from "../services/userService";
 
 export const check = async (req: Request, res: Response) => {
   const token = req.cookies["@whats-new:token"];
@@ -32,6 +35,7 @@ export const check = async (req: Request, res: Response) => {
     }
   );
 };
+
 export const login = async (
   req: Request,
   res: Response
@@ -41,25 +45,21 @@ export const login = async (
   const { username, password } = credentials;
 
   try {
-    const response = await authService.login(username, password, entranceMode);
+    const user = await authService.login(username, password, entranceMode);
 
-    if (response.error) {
-      return res.status(401).json({ message: response.error });
-    }
+    if (!user) return res.status(401).json({ message: "User not found" });
 
-    const token = response.token;
-    const user = response.user;
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+      return res.status(401).json({ message: "Invalid credentials" });
 
-    const cookieString = serialize("@whats-new:token", token as string, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-      sameSite: "strict",
-      path: "/",
+    const { accessToken, refreshToken } = generateTokens(user.id);
+    setRefreshTokenCookie(res, refreshToken);
+
+    res.json({
+      accessToken,
+      user,
     });
-
-    res.setHeader("Set-Cookie", cookieString);
-
-    res.status(201).json({ token, user });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -78,4 +78,36 @@ export const logout = (req: Request, res: Response): void | any => {
   res.setHeader("Set-Cookie", cookieString);
 
   return res.status(200).json({ message: "Logged out successfully" });
+};
+
+export const refresh = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    res.json({ isValid: false, message: "Invalid token" });
+    return;
+  }
+
+  try {
+    const { userId } = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_SECRET!
+    ) as { userId: string };
+
+    const user = await userService.getUserByKey("id", userId);
+
+    if (!user) {
+      res.json({ isValid: false, message: "Invalid token" });
+      return;
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      generateTokens(userId);
+    setRefreshTokenCookie(res, newRefreshToken);
+
+    res.json({ isValid: true, accessToken, user });
+  } catch (error) {
+    res.json({ isValid: false, message: "Invalid token" });
+    return;
+  }
 };

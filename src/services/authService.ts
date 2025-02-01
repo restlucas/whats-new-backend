@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -59,21 +58,7 @@ const authService = {
       });
     }
 
-    if (!userFound || !(await bcrypt.compare(pwd, userFound.password))) {
-      return { error: "Invalid credentials" };
-    }
-
-    const token = jwt.sign(
-      { id: userFound.id },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: "24h",
-      }
-    );
-
-    const { password, ...user } = userFound;
-
-    return { token, user };
+    return userFound;
   },
 };
 
