@@ -1,7 +1,7 @@
 import prisma from "../utils/db";
 import bcrypt from "bcryptjs";
 
-interface CreateUserData {
+export interface CreateUserData {
   name: string;
   username: string;
   email: string;
@@ -12,15 +12,8 @@ interface CreateUserData {
 }
 
 const userService = {
-  async createUser(data: CreateUserData) {
-    const {
-      name,
-      username,
-      email,
-      password,
-      invitationId,
-      registerMode: role,
-    } = data;
+  async createUser(data: CreateUserData, registerMode: "CREATOR" | "READER") {
+    const { name, username, email, password, invitationId } = data;
 
     const userUsernameExist = await prisma.user.findUnique({
       where: {
@@ -50,7 +43,7 @@ const userService = {
         username,
         email,
         password: hashedPassword,
-        role,
+        role: registerMode,
       },
     });
 

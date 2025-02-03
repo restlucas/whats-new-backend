@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-import userService from "../services/userService";
+import userService, { CreateUserData } from "../services/userService";
 import bcrypt from "bcryptjs";
 import { requestPwdReset } from "../utils/email";
 import { uploadToFirebase } from "../utils/uploadHelper";
@@ -12,35 +12,16 @@ export const createUser = async (
   req: Request,
   res: Response
 ): Promise<void | any> => {
-  const { token, ...rest } = req.body;
-  const file = req.file;
-
-  let invitationId = "";
-
-  if (token) {
-    const decoded = jwt.verify(
-      token as string,
-      process.env.JWT_SECRET as string
-    );
-    invitationId = (decoded as any).invitationId;
-  }
-
-  const formattedData = {
-    ...rest,
-    invitationId,
-  };
+  const { registerMode, user } = req.body;
 
   try {
-    const user = await userService.createUser(formattedData.user);
+    const createdUser = await userService.createUser(
+      user as CreateUserData,
+      registerMode as "CREATOR" | "READER"
+    );
 
-    if ("error" in user) {
-      return res.status(401).json({ message: user.error });
-    }
-
-    if (file) {
-      const fileName = `user-profile-pic/${user.id}.jpg`;
-      const profilePicUrl = await uploadToFirebase(file.buffer, fileName);
-      await userService.updateImage(user.id, profilePicUrl);
+    if ("error" in createdUser) {
+      return res.status(401).json({ message: createdUser.error });
     }
 
     return res.status(201).json({ message: "User created successfully" });
