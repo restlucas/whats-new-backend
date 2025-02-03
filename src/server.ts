@@ -1,10 +1,10 @@
 import app from "./app";
 import dotenv from "dotenv";
 
-dotenv.config(); // Carrega variáveis de ambiente do .env
+dotenv.config();
 
-const PORT = Number(process.env.PORT) || 3000; // Convertendo para número
-const HOST = process.env.HOST || "localhost"; // Para aceitar conexões externas
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = "0.0.0.0";
 
 const startServer = () => {
   try {
@@ -13,8 +13,7 @@ const startServer = () => {
     });
   } catch (error) {
     console.error("❌ Error starting server:", error);
-    process.exit(1); // Encerra o processo em caso de erro crítico
+    process.exit(1);
   }
 };
-
 startServer();
