@@ -3,7 +3,11 @@ import { Request, Response } from "express";
 import authService from "../services/authService";
 import { serialize } from "cookie";
 import bcrypt from "bcryptjs";
-import { generateTokens, setRefreshTokenCookie } from "../utils/token";
+import {
+  clearCookies,
+  generateTokens,
+  setRefreshTokenCookie,
+} from "../utils/token";
 import userService from "../services/userService";
 
 export const check = async (req: Request, res: Response) => {
@@ -68,14 +72,7 @@ export const login = async (
 };
 
 export const logout = (req: Request, res: Response): void | any => {
-  const cookieString = serialize("@whats-new:token", "", {
-    httpOnly: true,
-    maxAge: 0, // Define o cookie com um tempo de vida de 0, o que o exclui
-    sameSite: "strict",
-    path: "/",
-  });
-
-  res.setHeader("Set-Cookie", cookieString);
+  clearCookies(res);
 
   return res.status(200).json({ message: "Logged out successfully" });
 };
