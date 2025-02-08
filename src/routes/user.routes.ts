@@ -9,7 +9,7 @@ import {
   removeCommentLike,
   removeLike,
   updateProfile,
-} from "../controllers/userController";
+} from "../controllers/user.controller";
 
 const upload = multer({ storage: multer.memoryStorage() });
 const router = Router();

@@ -4,11 +4,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
+const HOST = "localhost";
 
 const startServer = () => {
   try {
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`🚀 Server is running at http://0.0.0.0:${PORT}/api`);
+      console.log(`🚀 Server is running at http://0.0.0.0:${PORT}/v1/api`);
     });
   } catch (error) {
     console.error("❌ Error starting server:", error);

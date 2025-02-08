@@ -63,7 +63,7 @@ model Invitation {
   id        String      @id @default(cuid())
   teamId    String
   userId    String
-  status    Invitationstatus @default(PENDING)
+  status    InvitationStatus @default(PENDING)
   createdAt DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id])
@@ -87,7 +87,7 @@ model News {
   updatedAt     DateTime  @updatedAt
   teamMemberId  String 
 
-  teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id])
+  teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
   editHistory NewsEditHistory[]
   comments    Comment[]
   likes       Like[]
@@ -101,8 +101,8 @@ model NewsEditHistory {
   teamMemberId    String
   createdAt DateTime @default(now())
 
-  news  News  @relation(fields: [newsId], references: [id])
-  teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id])
+  news  News  @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 
   @@unique([id])
 }
@@ -115,7 +115,7 @@ model Comment {
   newsId      String
   
   user        User      @relation(fields: [userId], references: [id])
-  news        News      @relation(fields: [newsId], references: [id])
+  news        News      @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   commentLike CommentLike[]
 
@@ -129,7 +129,7 @@ model CommentLike {
   createdAt   DateTime @default(now())
 
   user        User      @relation(fields: [userId], references: [id])
-  comment     Comment      @relation(fields: [commentId], references: [id])
+  comment     Comment      @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])
 }
@@ -179,9 +179,7 @@ enum TeamRole {
   OWNER
 }
 
-
-
-enum Invitationstatus {
+enum InvitationStatus {
   PENDING
   ACCEPTED
   REJECTED

@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { check, login, logout, refresh } from "../controllers/authController";
+import { check, login, logout, refresh } from "../controllers/auth.controller";
 import {
   requestPasswordReset,
   resetPassword,
   validateToken,
-} from "../controllers/userController";
+} from "../controllers/user.controller";
 
 const router = Router();
 
