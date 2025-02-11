@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: ["https://whats-new-rust.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
   })
