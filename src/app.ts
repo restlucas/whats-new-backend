@@ -7,9 +7,14 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log("Recebendo requisição de:", req.headers.origin);
+  next();
+});
+
 app.use(
   cors({
-    origin: process.env.WHATSNEW_FRONTEND_URL || "http://localhost:5173",
+    origin: ["https://whats-new-rust.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
