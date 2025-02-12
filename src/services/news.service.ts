@@ -32,6 +32,19 @@ interface EditNewsProps {
   userId: string;
 }
 
+const imagesSrc = [
+  "cover@1.jpg",
+  "cover@2.jpg",
+  "cover@3.jpg",
+  "cover@4.jpg",
+  "cover@5.jpg",
+  "cover@6.jpg",
+  "cover@7.jpg",
+  "cover@8.jpg",
+  "cover@9.jpg",
+  "cover@10.jpg",
+];
+
 const newsService = {
   async createNews(teamId: string, userId: string, data: CreateNewsProps) {
     const { fields } = data;
@@ -45,11 +58,14 @@ const newsService = {
       },
     });
 
+    const randomIndex = Math.floor(Math.random() * imagesSrc.length);
+    const image = imagesSrc[randomIndex];
+
     return prisma.news.create({
       data: {
         title: fields.title,
         slug: fields.slug,
-        image: "https://picsum.photos/800/600",
+        image,
         content: fields.content,
         description: fields.description,
         country: "US",
