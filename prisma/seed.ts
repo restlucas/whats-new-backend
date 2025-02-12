@@ -13,7 +13,19 @@ import { createSlug } from "../src/utils/slugify";
 
 const prisma = new PrismaClient();
 
-// Definindo as categorias e países
+const imagesSrc = [
+  "cover@1.jpg",
+  "cover@2.jpg",
+  "cover@3.jpg",
+  "cover@4.jpg",
+  "cover@5.jpg",
+  "cover@6.jpg",
+  "cover@7.jpg",
+  "cover@8.jpg",
+  "cover@9.jpg",
+  "cover@10.jpg",
+];
+
 const categories = [
   "world",
   "general",
@@ -28,8 +40,9 @@ const categories = [
 const countries = ["US"];
 
 async function getRandomImageUrl() {
-  const url = `https://picsum.photos/800/600`;
-  return url;
+  const randomIndex = Math.floor(Math.random() * imagesSrc.length);
+
+  return imagesSrc[randomIndex];
 }
 
 async function getRandomTeamMemberRow(): Promise<PrismaTeamMember | null> {

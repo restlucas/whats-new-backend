@@ -7,11 +7,6 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  console.log("Recebendo requisição de:", req.headers.origin);
-  next();
-});
-
 app.use(
   cors({
     origin: ["https://whats-new-rust.vercel.app"],
