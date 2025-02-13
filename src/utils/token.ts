@@ -9,6 +9,8 @@ export const generateTokens = (userId: string) => {
     expiresIn: "7d",
   });
 
+  console.log(accessToken);
+
   return { accessToken, refreshToken };
 };
 
