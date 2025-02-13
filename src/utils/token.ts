@@ -9,15 +9,13 @@ export const generateTokens = (userId: string) => {
     expiresIn: "7d",
   });
 
-  console.log(accessToken);
-
   return { accessToken, refreshToken };
 };
 
 export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
   });
