@@ -73,6 +73,8 @@ export const logout = (req: Request, res: Response): void | any => {
 export const refresh = async (req: Request, res: Response) => {
   const refreshToken = req.cookies.refreshToken;
 
+  console.log(refreshToken);
+
   if (!refreshToken) {
     return responseHandler.error(res, 400, "Invalid token");
   }
