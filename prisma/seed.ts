@@ -76,13 +76,13 @@ async function getRandomUserRow(): Promise<PrismaUser | null> {
 }
 
 async function createSpecificUser() {
-  const hashedPassword = await bcrypt.hash("123", 10);
+  const hashedPassword = await bcrypt.hash("root", 10);
 
   return await prisma.user.create({
     data: {
-      name: "Lucas Souza de Oliveira",
-      username: "restlucas",
-      email: "restlucas.dev@gmail.com",
+      name: "Root User",
+      username: "root",
+      email: "rootuser.test@gmail.com",
       role: "ADMIN",
       password: hashedPassword,
     },
