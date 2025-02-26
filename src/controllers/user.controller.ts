@@ -127,15 +127,10 @@ export const removeCommentLike = async (req: Request, res: Response) => {
 };
 
 export const requestPasswordReset = async (req: Request, res: Response) => {
-  const { key, email } = req.body;
-
-  console.log(req.body);
+  const { userEmail } = req.body;
 
   try {
-    const user = await userService.getUserByKey(
-      key as "email",
-      email as string
-    );
+    const user = await userService.getUserByKey("email", userEmail as string);
 
     if (!user) {
       return responseHandler.error(res, 404, "User not found");
