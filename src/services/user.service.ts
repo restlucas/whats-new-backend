@@ -69,20 +69,16 @@ const userService = {
   },
 
   async getUserByKey(key: "id" | "username" | "email", value: string) {
-    const whereCondition =
-      key === "id"
-        ? { id: value }
-        : key === "username"
-        ? { username: value }
-        : { email: value };
+    const whereCondition = { [key]: value };
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: whereCondition,
     });
 
+    console.log(user);
+
     return user;
   },
-
   async updateProfile(
     userId: string,
     data: { image: string; name: string; password: string }

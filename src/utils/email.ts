@@ -5,7 +5,7 @@ const projectEmail = process.env.WHATSNEW_EMAIL;
 const projectPwd = process.env.WHATSNEW_EMAIL_PASS;
 
 export const requestPwdReset = async (token: string, userEmail: string) => {
-  const resetLink = `${frontUrl}/auth/reset-password?token=${token}`;
+  const resetLink = `${frontUrl}auth/reset-password?token=${token}`;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
