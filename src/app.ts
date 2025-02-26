@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: process.env.WHATSNEW_FRONTEND_URL?.split(",") || "*",
+    origin: ["http://localhost:5173/", "https://whats-new-rust.vercel.app/"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
