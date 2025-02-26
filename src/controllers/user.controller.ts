@@ -129,6 +129,8 @@ export const removeCommentLike = async (req: Request, res: Response) => {
 export const requestPasswordReset = async (req: Request, res: Response) => {
   const { key, email } = req.body;
 
+  console.log(email);
+
   try {
     const user = await userService.getUserByKey(
       key as "email",

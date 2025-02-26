@@ -75,8 +75,6 @@ const userService = {
       where: whereCondition,
     });
 
-    console.log(user);
-
     return user;
   },
   async updateProfile(
